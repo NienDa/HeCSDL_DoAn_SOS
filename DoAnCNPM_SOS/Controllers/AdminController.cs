@@ -13,8 +13,6 @@ namespace DoAnCNPM_SOS.Controllers
     {
         private SOSEntities1 db = new SOSEntities1();
 
-        // GET: Admin/Dashboard
-        // Trang hiển thị danh sách nhân viên và nút chức năng
         public ActionResult Dashboard()
         {
             if (Session["NVID"] == null)
@@ -24,7 +22,6 @@ namespace DoAnCNPM_SOS.Controllers
             // 1. Lấy danh sách nhân viên
             var listNV = db.NVs.OrderByDescending(x => x.LUONG).ToList();
 
-            // 2. LẤY THỜI GIAN BACKUP GẦN NHẤT
             try
             {
                 // Truy vấn vào bảng hệ thống msdb để tìm lịch sử backup của DB "SOS"
@@ -34,63 +31,50 @@ namespace DoAnCNPM_SOS.Controllers
             WHERE database_name = 'SOS' AND type = 'D' 
             ORDER BY backup_finish_date DESC";
 
-                // type = 'D' nghĩa là Full Database Backup
-
                 var lastBackupTime = db.Database.SqlQuery<DateTime?>(sqlQuery).FirstOrDefault();
 
                 ViewBag.LastBackupTime = lastBackupTime;
             }
             catch
             {
-                // Trường hợp không có quyền truy cập msdb hoặc chưa backup lần nào
                 ViewBag.LastBackupTime = null;
             }
-            // 3.Lấy danh sách file Backup trong ổ C
             var backupFolder = @"C:\Backup_SOS";
             if (!Directory.Exists(backupFolder))
             {
                 Directory.CreateDirectory(backupFolder);
             }
 
-            // Lấy tên file, sắp xếp mới nhất lên đầu
             var backupFiles = Directory.GetFiles(backupFolder, "*.bak")
                                  .Select(Path.GetFileName)
                                  .OrderByDescending(f => f)
                                  .ToList();
 
-            ViewBag.BackupFiles = backupFiles; // Truyền sang View để hiển thị list
+            ViewBag.BackupFiles = backupFiles;
 
             return View(listNV);
         }
 
         // POST: Admin/CapNhatCapBac
-        // Action này sẽ gọi Stored Procedure
         [HttpPost]
         public ActionResult CapNhatCapBac()
         {
             try
             {
-                // Gọi Stored Procedure từ SQL
-                // Hàm này được EF tự sinh ra ở Bước 1
                 db.USP_CAPNHAT_CAPBAC_NV_TU_LUONG();
-
-                // Lưu thông báo thành công để hiện bên View
                 TempData["Message"] = "Đã chạy Cursor cập nhật cấp bậc thành công!";
-                TempData["Type"] = "success"; // Màu xanh
+                TempData["Type"] = "success"; 
             }
             catch (Exception ex)
             {
                 TempData["Message"] = "Lỗi: " + ex.Message;
-                TempData["Type"] = "danger"; // Màu đỏ
+                TempData["Type"] = "danger"; 
             }
-
-            // Load lại trang Dashboard để thấy sự thay đổi
             return RedirectToAction("Dashboard");
         }
 
         public ActionResult NhaCungCap()
         {
-            // Lấy danh sách NCC
             return View(db.NCCs.ToList());
         }
 
@@ -100,7 +84,6 @@ namespace DoAnCNPM_SOS.Controllers
         {
             try
             {
-                // Tự động tăng ID (Lấy Max + 1)
                 int newID = db.NCCs.Any() ? db.NCCs.Max(n => n.NCCID) + 1 : 1;
 
                 var ncc = new NCC
@@ -112,7 +95,7 @@ namespace DoAnCNPM_SOS.Controllers
                 };
 
                 db.NCCs.Add(ncc);
-                db.SaveChanges(); // Lưu vào SQL
+                db.SaveChanges();
 
                 TempData["Message"] = "Thêm Nhà cung cấp thành công!";
                 TempData["Type"] = "success";
@@ -125,23 +108,16 @@ namespace DoAnCNPM_SOS.Controllers
             return RedirectToAction("NhaCungCap");
         }
 
-
-        // --- CÁC CHỨC NĂNG NÂNG CAO (BACKUP & LOGIC) ---
-
         // 1. BACKUP DATABASE
         [HttpPost]
         public ActionResult BackupDatabase()
         {
             try
             {
-                // Đường dẫn lưu file (LƯU Ý: Phải tạo thư mục C:\Backup_SOS trong máy tính trước)
                 string fileName = $"SOS_Backup_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
                 string filePath = $@"C:\Backup_SOS\{fileName}";
 
-                // Câu lệnh T-SQL Backup
                 string sql = $"BACKUP DATABASE [SOS] TO DISK = '{filePath}' WITH INIT";
-
-                // Thực thi lệnh (Quan trọng: Backup không được nằm trong Transaction nên phải dùng DoNotEnsureTransaction)
                 db.Database.ExecuteSqlCommand(System.Data.Entity.TransactionalBehavior.DoNotEnsureTransaction, sql);
 
                 TempData["Message"] = $"✅ Đã sao lưu dữ liệu thành công tại: {filePath}";
@@ -155,13 +131,12 @@ namespace DoAnCNPM_SOS.Controllers
             return RedirectToAction("Dashboard");
         }
 
-        // 2. TĂNG GIÁ HÀNG LOẠT (Gọi USP_TANG_GIA_DMSP)
+        // 2.TĂNG GIÁ HÀNG LOẠT (Gọi USP_TANG_GIA_DMSP)
         [HttpPost]
         public ActionResult TangGia(int? dmspId, double phanTram)
         {
             try
             {
-                // Nếu dmspId null thì tăng tất cả
                 db.Database.ExecuteSqlCommand("EXEC USP_TANG_GIA_DMSP @p0, @p1", dmspId, phanTram);
 
                 TempData["Message"] = $"✅ Đã tăng giá {phanTram}% thành công!";
@@ -175,15 +150,14 @@ namespace DoAnCNPM_SOS.Controllers
             return RedirectToAction("Dashboard");
         }
 
-        // 3. TÍNH DOANH THU NHÂN VIÊN (Gọi USP_TINH_DOANHTHU_NV)
+        // 3.TÍNH DOANH THU NHÂN VIÊN (Gọi USP_TINH_DOANHTHU_NV)
         public ActionResult DoanhThuNhanVien()
         {
-            // Procedure này trả về bảng kết quả, ta dùng SqlQuery để map vào class tạm
             var report = db.Database.SqlQuery<DoanhThuReport>("EXEC USP_TINH_DOANHTHU_NV").ToList();
             return View(report);
         }
 
-        // Demo: USP_TINH_DOANHTHU_NV (Sử dụng Cursor)
+        //USP_TINH_DOANHTHU_NV (Sử dụng Cursor)
         public ActionResult BaoCaoDoanhThu()
         {
             var data = db.Database.SqlQuery<DoanhThuViewModel>("EXEC USP_TINH_DOANHTHU_NV").ToList();
@@ -212,10 +186,8 @@ namespace DoAnCNPM_SOS.Controllers
             {
                 string tenFileAnh = null;
 
-                // Xử lý file ảnh upload
                 if (hinhAnh != null && hinhAnh.ContentLength > 0)
                 {
-                    // Có chọn ảnh -> Lưu ảnh thật
                     string fileName = System.IO.Path.GetFileName(hinhAnh.FileName);
                     tenFileAnh = fileName;
                     string path = Server.MapPath("~/images/" + fileName);
@@ -226,7 +198,6 @@ namespace DoAnCNPM_SOS.Controllers
                     tenFileAnh = "default.png";
                 }
 
-                // Gọi Stored Procedure với tham số mới
                 string sql = "EXEC USP_THEM_SP @p0, @p1, @p2, @p3, @p4, @p5";
                 db.Database.ExecuteSqlCommand(sql, tenSP, dmspId, nccId, gia, soLuong, tenFileAnh);
 
@@ -244,7 +215,6 @@ namespace DoAnCNPM_SOS.Controllers
         // GET: Admin/ThemDanhMuc
         public ActionResult ThemDanhMuc()
         {
-            // Nếu muốn hiện danh sách danh mục cũ bên dưới form thì lấy list
             ViewBag.ListDMSP = db.DMSPs.OrderByDescending(d => d.DMSPID).ToList();
             return View();
         }
@@ -255,7 +225,6 @@ namespace DoAnCNPM_SOS.Controllers
         {
             try
             {
-                // Gọi Stored Procedure thêm danh mục
                 string sql = "EXEC USP_THEM_DMSP @p0, @p1";
                 db.Database.ExecuteSqlCommand(sql, tenDM, moTa);
 
@@ -264,7 +233,6 @@ namespace DoAnCNPM_SOS.Controllers
             }
             catch (Exception ex)
             {
-                // Lấy lỗi từ SQL (ví dụ trùng tên)
                 string errorMsg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 TempData["Message"] = "Lỗi: " + errorMsg;
                 TempData["Type"] = "danger";
@@ -280,7 +248,6 @@ namespace DoAnCNPM_SOS.Controllers
         }
 
         // GET: Admin/RestoreDatabase
-        // Hiển thị danh sách các bản Backup có trong ổ cứng
         public ActionResult RestoreDatabase()
         {
             var backupFolder = @"C:\Backup_SOS";
@@ -292,29 +259,20 @@ namespace DoAnCNPM_SOS.Controllers
             // Lấy danh sách file .bak
             var files = Directory.GetFiles(backupFolder, "*.bak")
                                  .Select(Path.GetFileName)
-                                 .OrderByDescending(f => f) // File mới nhất lên đầu
+                                 .OrderByDescending(f => f)
                                  .ToList();
 
             return View(files);
         }
 
         // POST: Admin/ProcessRestore
-        // Thực hiện phục hồi dữ liệu
         [HttpPost]
         public ActionResult ProcessRestore(string fileName)
         {
             try
             {
                 string filePath = $@"C:\Backup_SOS\{fileName}";
-
-                // 1. Tạo chuỗi kết nối tới MASTER (Không kết nối vào SOS để tránh bị khóa)
-                // Lưu ý: Lấy connection string hiện tại nhưng đổi Initial Catalog thành master
                 string connectionString = db.Database.Connection.ConnectionString.Replace("Initial Catalog=SOS", "Initial Catalog=master");
-
-                // 2. Câu lệnh SQL "Quyền lực"
-                // - Chuyển DB về chế độ SINGLE_USER (Đá văng mọi kết nối khác ra, kể cả Web)
-                // - Restore dữ liệu
-                // - Chuyển lại về MULTI_USER (Cho phép kết nối lại)
                 string sql = $@"
             USE master;
             ALTER DATABASE [SOS] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;

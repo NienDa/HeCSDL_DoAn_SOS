@@ -22,8 +22,6 @@ namespace DoAnCNPM_SOS.Controllers
         [HttpPost]
         public ActionResult Login(string sdt, string password)
         {
-            // Demo đơn giản: Check SĐT có trong bảng NV không
-            // Mật khẩu demo mặc định là "123"
             var nv = db.NVs.FirstOrDefault(x => x.SDT == sdt);
 
             if (nv != null && password == "123")
@@ -32,7 +30,7 @@ namespace DoAnCNPM_SOS.Controllers
                 Session["User"] = nv;
                 Session["TenNV"] = nv.TENNV;
                 Session["NVID"] = nv.NVID;
-                Session["Role"] = nv.CAPBAC; // QUẢN LÝ hoặc NHÂN VIÊN
+                Session["Role"] = nv.CAPBAC;
 
                 return RedirectToAction("Index", "Home");
             }

@@ -13,7 +13,7 @@ namespace DoAnCNPM_SOS.Controllers
         // 1. DÀNH CHO QUẢN LÝ: ĐIỀU PHỐI ĐƠN HÀNG
         public ActionResult Index()
         {
-            // Kiểm tra quyền: Chỉ QUẢN LÝ mới được vào trang điều phối
+            // Kiểm tra quyền: Chỉ QUẢN LÝ mới được vào
             if (Session["Role"] == null || Session["Role"].ToString() != "QUẢN LÝ")
             {
                 // Nếu là Shipper (Nhân viên), chuyển thẳng sang trang nhiệm vụ của họ
@@ -31,7 +31,7 @@ namespace DoAnCNPM_SOS.Controllers
             return View(listHD);
         }
 
-        // Action Phân công (Insert vào bảng GH) - Giữ nguyên như cũ
+        // Action Phân công (Insert vào bảng GH)
         [HttpPost]
         public ActionResult ShipOrder(int hdId, int shipperId, DateTime ngayGiao)
         {
@@ -67,14 +67,13 @@ namespace DoAnCNPM_SOS.Controllers
 
             int currentNvId = (int)Session["NVID"];
 
-            // Lấy danh sách đơn hàng ĐANG GIAO được phân công cho nhân viên này
             var myTasks = db.GHs.Where(g => g.NVID == currentNvId && g.TRANGTHAI == "ĐANG GIAO")
                                 .OrderBy(g => g.NGAYGIAO).ToList();
 
             return View(myTasks);
         }
 
-        // 3. CẬP NHẬT TRẠNG THÁI (ĐÃ GIAO / HỦY)
+        // 3. CẬP NHẬT TRẠNG THÁI
         [HttpPost]
         public ActionResult UpdateStatus(int ghId, string status)
         {
@@ -83,10 +82,7 @@ namespace DoAnCNPM_SOS.Controllers
                 var gh = db.GHs.Find(ghId);
                 if (gh != null)
                 {
-                    // Cập nhật bảng GH
-                    gh.TRANGTHAI = status; // "ĐÃ GIAO" hoặc "ĐÃ HỦY"
-
-                    // Cập nhật luôn bảng HD cho đồng bộ
+                    gh.TRANGTHAI = status;
                     var hd = db.HDs.Find(gh.HDID);
                     if (status == "ĐÃ GIAO") hd.TRANGTHAI = "HOÀN THÀNH";
                     else if (status == "ĐÃ HỦY") hd.TRANGTHAI = "ĐÃ HỦY";
@@ -104,7 +100,7 @@ namespace DoAnCNPM_SOS.Controllers
             return RedirectToAction("MyTasks");
         }
 
-        // Lịch sử chung (Ai cũng xem được)
+        // Lịch sử chung 
         public ActionResult History()
         {
             var listGH = db.GHs.OrderByDescending(g => g.NGAYGIAO).ToList();
