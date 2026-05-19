@@ -1,0 +1,151 @@
+﻿@model DoAnCNPM_SOS.Models.SP
+
+@{
+    ViewBag.Title = Model.TENSP;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="py-5 bg-light">
+    <div class="container">
+
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")" class="text-decoration-none">Trang chủ</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.TENSP</li>
+            </ol>
+        </nav>
+
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-@TempData["Type"] alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
+                <strong class="me-2">Thông báo từ SQL:</strong> @TempData["Message"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+            <div class="row g-0">
+                <div class="col-md-5 bg-white d-flex align-items-center justify-content-center p-4">
+                    <img src="/images/@(string.IsNullOrEmpty(Model.HINHANH) ? "product-thumb-" + (Model.SPID % 10 + 1) + ".png" : Model.HINHANH)"
+                         class="img-fluid rounded hover-zoom"
+                         alt="@Model.TENSP"
+                         style="max-height: 400px; object-fit: contain; transition: transform 0.3s;">
+                </div>
+
+                <div class="col-md-7">
+                    <div class="card-body p-4 p-lg-5 h-100 d-flex flex-column justify-content-center bg-white">
+                        <div class="mb-2">
+                            @if (Model.SOLUONG > 0)
+                            {
+                                <span class="badge bg-success rounded-pill px-3">Còn hàng: @Model.SOLUONG</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger rounded-pill px-3">Hết hàng</span>
+                            }
+                            <span class="badge bg-info text-dark rounded-pill px-3 ms-2">Mã SP: #@Model.SPID</span>
+                        </div>
+
+                        <h1 class="display-5 fw-bold text-dark mb-3">@Model.TENSP</h1>
+
+                        <div class="mb-4">
+                            <span class="display-6 fw-bold text-primary me-3">@String.Format("{0:N0} đ", Model.GIA)</span>
+                            <span class="text-muted text-decoration-line-through fs-5">@String.Format("{0:N0} đ", Model.GIA * 1.2m)</span>
+                        </div>
+
+                        <p class="text-muted mb-4">
+                            Sản phẩm tươi ngon, chất lượng cao, được kiểm định an toàn thực phẩm.
+                            Giao hàng nhanh trong 2h. Đổi trả miễn phí nếu không hài lòng.
+                        </p>
+
+                        <div class="d-grid gap-2 d-md-flex">
+                            <a href="@Url.Action("Create", "Order")" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-sm">
+                                <svg width="20" height="20" class="me-2 mb-1"><use xlink:href="#cart"></use></svg>
+                                MUA NGAY
+                            </a>
+                            <button class="btn btn-outline-dark btn-lg rounded-pill px-4">
+                                <svg width="20" height="20"><use xlink:href="#heart"></use></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h4 class="fw-bold mb-0">Đánh giá & Nhận xét</h4>
+                    </div>
+                    <div class="card-body p-4">
+
+                        <div class="bg-light p-4 rounded-3 mb-5 border border-warning">
+                            <h5 class="fw-bold text-warning mb-3">🛠 Demo Trigger: Ràng buộc đánh giá</h5>
+                            <p class="small text-muted mb-3">Thử chọn cùng 1 khách hàng và gửi đánh giá 2 lần cho sản phẩm này để xem Trigger chặn lại.</p>
+
+                            <form action="@Url.Action("SubmitReview", "Product")" method="post">
+                                <input type="hidden" name="spId" value="@Model.SPID" />
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="fw-bold small">Khách hàng giả lập:</label>
+                                        @Html.DropDownList("khId", (SelectList)ViewBag.KHID, new { @class = "form-select form-select-sm" })
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="fw-bold small">Số sao:</label>
+                                        <select name="sao" class="form-select form-select-sm">
+                                            <option value="5">⭐⭐⭐⭐⭐ (Tuyệt vời)</option>
+                                            <option value="4">⭐⭐⭐⭐ (Tốt)</option>
+                                            <option value="3">⭐⭐⭐ (Bình thường)</option>
+                                            <option value="2">⭐⭐ (Tệ)</option>
+                                            <option value="1">⭐ (Rất tệ)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <textarea name="binhLuan" class="form-control" rows="2" placeholder="Viết đánh giá của bạn..." required></textarea>
+                                    </div>
+                                    <div class="col-12 text-end">
+                                        <button type="submit" class="btn btn-warning fw-bold text-dark px-4">Gửi Đánh Giá</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <h5 class="fw-bold mb-4">Các đánh giá gần đây (@((ViewBag.DanhSachDanhGia as List<DoAnCNPM_SOS.Models.DG>).Count))</h5>
+
+                        <div class="review-list">
+                            @foreach (var dg in ViewBag.DanhSachDanhGia as List<DoAnCNPM_SOS.Models.DG>)
+                            {
+                                <div class="d-flex gap-3 mb-4 border-bottom pb-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="rounded-circle bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center text-primary fw-bold" style="width: 50px; height: 50px;">
+                                            KH
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <h6 class="fw-bold mb-0">Khách hàng #@dg.KHID</h6>
+                                            <small class="text-muted">@String.Format("{0:dd/MM/yyyy}", dg.NGAYDG)</small>
+                                        </div>
+                                        <div class="text-warning mb-2" style="font-size: 0.9rem;">
+                                            @for (int i = 0; i < dg.SAO; i++)
+                                            {<span>★</span>}
+                                            <span class="text-muted ms-1" style="font-size: 0.8rem;">(@dg.SAO/5)</span>
+                                        </div>
+                                        <p class="text-dark mb-0 bg-light p-2 rounded">@dg.BINHLUAN</p>
+                                    </div>
+                                </div>
+                            }
+                            @if ((ViewBag.DanhSachDanhGia as List<DoAnCNPM_SOS.Models.DG>).Count == 0)
+                            {
+                                <p class="text-center text-muted fst-italic py-4">Chưa có đánh giá nào. Hãy là người đầu tiên!</p>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

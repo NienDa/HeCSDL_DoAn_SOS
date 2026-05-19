@@ -1,0 +1,56 @@
+﻿@model IEnumerable<DoAnCNPM_SOS.Models.NCC>
+@{
+    ViewBag.Title = "NhaCungCap";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <h2 class="text-primary fw-bold mb-4">QUẢN LÝ NHÀ CUNG CẤP (TABLE NCC)</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">Thêm đối tác mới</div>
+                <div class="card-body">
+                    <form action="@Url.Action("ThemNCC", "Admin")" method="post">
+                        <div class="mb-3">
+                            <label>Tên Nhà Cung Cấp</label>
+                            <input type="text" name="tenNCC" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label>Số điện thoại</label>
+                            <input type="text" name="sdt" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Địa chỉ</label>
+                            <input type="text" name="diaChi" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Lưu vào Database</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr><th>ID</th><th>Tên NCC</th><th>SĐT</th><th>Địa chỉ</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.NCCID</td>
+                                <td class="fw-bold">@item.TENNCC</td>
+                                <td>@item.SDTNCC</td>
+                                <td>@item.DIACHI</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

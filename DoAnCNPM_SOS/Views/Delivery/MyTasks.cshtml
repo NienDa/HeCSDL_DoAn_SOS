@@ -1,0 +1,78 @@
+﻿@model IEnumerable<DoAnCNPM_SOS.Models.GH>
+@{
+    ViewBag.Title = "MyTasks";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-success mb-0">NHIỆM VỤ CỦA TÔI</h2>
+            <p class="text-muted">Xin chào, @Session["TenNV"]!</p>
+        </div>
+        <a href="@Url.Action("History", "Delivery")" class="btn btn-outline-secondary">Xem lịch sử toàn hệ thống</a>
+    </div>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["Type"]">@TempData["Message"]</div>
+    }
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white fw-bold">
+            DANH SÁCH ĐƠN CẦN GIAO (@Model.Count())
+        </div>
+        <div class="card-body">
+            @if (Model.Count() == 0)
+            {
+                <div class="text-center py-5">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4076/4076432.png" width="80" class="mb-3 opacity-50" />
+                    <h5 class="text-muted">Bạn đang rảnh rỗi! Chưa có đơn hàng mới.</h5>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-warning h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title fw-bold">Đơn hàng #@item.HDID</h5>
+                                        <span class="badge bg-warning text-dark">@item.TRANGTHAI</span>
+                                    </div>
+                                    <p class="card-text mb-1">
+                                        <strong>Khách hàng:</strong> @(item.HD.KH != null ? item.HD.KH.TENKH : "Khách lẻ") <br />
+                                        <strong>SĐT:</strong> @(item.HD.KH != null ? item.HD.KH.SDT : "---") <br />
+                                        <strong>Địa chỉ:</strong> @(item.HD.KH != null ? item.HD.KH.DIACHI : "Tại quầy")
+                                    </p>
+                                    <p class="text-danger fw-bold">Thu hộ: @String.Format("{0:N0} VNĐ", item.HD.TONGTIEN)</p>
+                                    <hr />
+
+                                    <div class="d-flex gap-2">
+                                        <form action="@Url.Action("UpdateStatus", "Delivery")" method="post" class="flex-grow-1">
+                                            <input type="hidden" name="ghId" value="@item.GHID" />
+                                            <input type="hidden" name="status" value="ĐÃ GIAO" />
+                                            <button type="submit" class="btn btn-success w-100 fw-bold">
+                                                ✅ ĐÃ GIAO XONG
+                                            </button>
+                                        </form>
+
+                                        <form action="@Url.Action("UpdateStatus", "Delivery")" method="post" class="flex-grow-1">
+                                            <input type="hidden" name="ghId" value="@item.GHID" />
+                                            <input type="hidden" name="status" value="ĐÃ HỦY" />
+                                            <button type="submit" class="btn btn-outline-danger w-100 fw-bold">
+                                                ❌ KHÁCH HỦY
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

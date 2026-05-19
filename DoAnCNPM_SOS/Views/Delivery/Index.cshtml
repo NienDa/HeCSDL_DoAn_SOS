@@ -1,0 +1,71 @@
+﻿@model IEnumerable<DoAnCNPM_SOS.Models.HD>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-danger fw-bold">KHO VẬN & GIAO HÀNG (TABLE GH)</h2>
+        <a href="@Url.Action("History", "Delivery")" class="btn btn-outline-dark">Xem Lịch sử Giao Hàng &rarr;</a>
+    </div>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["Type"]">@TempData["Message"]</div>
+    }
+
+    <div class="card border-0 shadow">
+        <div class="card-header bg-warning text-dark fw-bold">ĐƠN HÀNG CHỜ XỬ LÝ (CHƯA GIAO)</div>
+        <div class="card-body">
+            @if (Model.Count() == 0)
+            {<p class="text-center text-muted">Không có đơn hàng mới.</p>}
+
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Mã HD</th>
+                        <th>Khách hàng</th>
+                        <th>Tổng tiền</th>
+                        <th>Ngày lập</th>
+                        <th>Hành động (Insert GH)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">#@item.HDID</td>
+                            <td>
+                                @(item.KH != null ? item.KH.TENKH : "Khách vãng lai") <br />
+                                <small class="text-muted">(@(item.KH != null ? item.KH.DIACHI : ""))</small>
+                            </td>
+                            <td class="text-success fw-bold">@String.Format("{0:N0}", item.TONGTIEN)</td>
+                            <td>@String.Format("{0:dd/MM/yyyy}", item.NGAYLAP)</td>
+                            <td>
+                                <form action="@Url.Action("ShipOrder", "Delivery")" method="post" class="d-flex gap-2">
+                                    <input type="hidden" name="hdId" value="@item.HDID" />
+
+                                    <select name="shipperId" class="form-select form-select-sm" style="width: 150px;" required>
+                                        <option value="">Chọn Shipper</option>
+                                        @foreach (var shipper in ViewBag.Shippers as SelectList)
+                                        {
+                                            <option value="@shipper.Value">@shipper.Text</option>
+                                        }
+                                    </select>
+
+                                    <input type="date" name="ngayGiao" class="form-control form-control-sm" style="width: 130px;" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+
+                                    <button type="submit" class="btn btn-sm btn-primary text-nowrap">
+                                        🚀 Giao ngay
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="14311f7be86e48449c7ec3aff97a4935" Name="Diagram1" ZoomLevel="70">
+        <EntityTypeShape EntityType="SOSModel.CTHD" Width="1.5" PointX="8.25" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SOSModel.DG" Width="1.5" PointX="3" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="SOSModel.DMSP" Width="1.5" PointX="1.5" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SOSModel.GH" Width="1.5" PointX="8.25" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SOSModel.HD" Width="1.5" PointX="6" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SOSModel.KH" Width="1.5" PointX="0.75" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SOSModel.NCC" Width="1.5" PointX="1.5" PointY="12.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SOSModel.NV" Width="1.5" PointX="3.75" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="SOSModel.SP" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SOSModel.TT" Width="1.5" PointX="8.25" PointY="12.25" IsExpanded="true" />
+        <AssociationConnector Association="SOSModel.FK_CTHD_HD" ManuallyRouted="false" />
+        <AssociationConnector Association="SOSModel.FK_CTHD_SP" ManuallyRouted="false" />
+        <AssociationConnector Association="SOSModel.FK_DG_KH" ManuallyRouted="false" />
+        <AssociationConnector Association="SOSModel.FK_DG_SP" ManuallyRouted="false" />
+        <AssociationConnector Association="SOSModel.FK_SP_DMSP" ManuallyRouted="false" />
+        <AssociationConnector Association="SOSModel.FK_GH_HD" ManuallyRouted="false" />
+        <AssociationConnector Association="SOSModel.FK_GH_NV" ManuallyRouted="false" />
+        <AssociationConnector Association="SOSModel.FK_HD_KH" ManuallyRouted="false" />
+        <AssociationConnector Association="SOSModel.FK_HD_NV" ManuallyRouted="false" />
+        <AssociationConnector Association="SOSModel.FK_TT_HD" ManuallyRouted="false" />
+        <AssociationConnector Association="SOSModel.FK_SP_NCC" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

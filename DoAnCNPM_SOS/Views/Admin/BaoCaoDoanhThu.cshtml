@@ -1,0 +1,29 @@
+﻿@model IEnumerable<DoAnCNPM_SOS.Controllers.AdminController.DoanhThuViewModel>
+@{
+    ViewBag.Title = "BaoCaoDoanhThu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container py-5">
+    <h3 class="fw-bold text-success">BÁO CÁO DOANH THU (CURSOR DEMO)</h3>
+    <p>Dữ liệu được tính toán bởi Cursor trong Stored Procedure <code>USP_TINH_DOANHTHU_NV</code></p>
+
+    <table class="table table-bordered border-success mt-3">
+        <thead class="bg-success text-white">
+            <tr>
+                <th>Mã NV</th>
+                <th>Tên Nhân Viên</th>
+                <th>Tổng Doanh Thu Mang Về</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.NVID</td>
+                    <td>@item.TENNV</td>
+                    <td class="fw-bold text-end">@String.Format("{0:N0} VNĐ", item.DOANHTHU)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewBag.Title = "ThemDanhMuc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var listDMSP = ViewBag.ListDMSP as List<DoAnCNPM_SOS.Models.DMSP>;
+}
+
+<div class="container py-5">
+
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Admin")">Admin Dashboard</a></li>
+            <li class="breadcrumb-item active">Quản lý Danh mục</li>
+        </ol>
+    </nav>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["Type"] alert-dismissible fade show shadow-sm" role="alert">
+            <strong>Thông báo:</strong> @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+
+        <div class="col-md-5">
+            <div class="card border-0 shadow rounded-4 h-100">
+                <div class="card-header bg-primary text-white fw-bold text-uppercase py-3">
+                    <svg width="20" height="20" class="me-2 mb-1"><use xlink:href="#plus"></use></svg>
+                    Thêm Danh Mục Mới
+                </div>
+                <div class="card-body p-4 bg-light">
+                    <form action="@Url.Action("ThemDanhMuc", "Admin")" method="post">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên danh mục <span class="text-danger">*</span></label>
+                            <input type="text" name="tenDM" class="form-control" placeholder="Ví dụ: Thực phẩm chức năng..." required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Mô tả</label>
+                            <textarea name="moTa" class="form-control" rows="4" placeholder="Nhập mô tả chi tiết..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2 rounded-pill shadow-sm">
+                            Lưu dữ liệu (EXEC USP)
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="card border-0 shadow rounded-4 h-100">
+                <div class="card-header bg-white fw-bold py-3 border-bottom">
+                    <svg width="20" height="20" class="me-2 mb-1"><use xlink:href="#category"></use></svg>
+                    DANH MỤC HIỆN CÓ (@(listDMSP != null ? listDMSP.Count : 0))
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-hover table-striped mb-0 align-middle">
+                            <thead class="table-light sticky-top">
+                                <tr>
+                                    <th class="ps-3">ID</th>
+                                    <th>Tên Danh Mục</th>
+                                    <th>Mô tả</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (listDMSP != null)
+                                {
+                                    foreach (var item in listDMSP)
+                                    {
+                                        <tr>
+                                            <td class="ps-3 fw-bold text-muted">#@item.DMSPID</td>
+                                            <td class="fw-bold text-primary">@item.TENDM</td>
+                                            <td class="small text-muted">@item.MOTA</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

@@ -1,0 +1,821 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SOSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CTHD">
+          <Key>
+            <PropertyRef Name="HDID" />
+            <PropertyRef Name="SPID" />
+          </Key>
+          <Property Name="HDID" Type="int" Nullable="false" />
+          <Property Name="SPID" Type="int" Nullable="false" />
+          <Property Name="SOLUONG" Type="int" />
+          <Property Name="DONGIA" Type="money" />
+        </EntityType>
+        <EntityType Name="DG">
+          <Key>
+            <PropertyRef Name="DGID" />
+          </Key>
+          <Property Name="DGID" Type="int" Nullable="false" />
+          <Property Name="KHID" Type="int" Nullable="false" />
+          <Property Name="SPID" Type="int" Nullable="false" />
+          <Property Name="SAO" Type="int" />
+          <Property Name="BINHLUAN" Type="nvarchar" MaxLength="255" />
+          <Property Name="NGAYDG" Type="date" />
+        </EntityType>
+        <EntityType Name="DMSP">
+          <Key>
+            <PropertyRef Name="DMSPID" />
+          </Key>
+          <Property Name="DMSPID" Type="int" Nullable="false" />
+          <Property Name="TENDM" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="MOTA" Type="nvarchar" MaxLength="300" />
+        </EntityType>
+        <EntityType Name="GH">
+          <Key>
+            <PropertyRef Name="GHID" />
+          </Key>
+          <Property Name="GHID" Type="int" Nullable="false" />
+          <Property Name="HDID" Type="int" />
+          <Property Name="NVID" Type="int" />
+          <Property Name="NGAYGIAO" Type="date" />
+          <Property Name="TRANGTHAI" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="HD">
+          <Key>
+            <PropertyRef Name="HDID" />
+          </Key>
+          <Property Name="HDID" Type="int" Nullable="false" />
+          <Property Name="KHID" Type="int" />
+          <Property Name="NVID" Type="int" />
+          <Property Name="NGAYLAP" Type="datetime" />
+          <Property Name="TONGTIEN" Type="money" />
+          <Property Name="TRANGTHAI" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="KH">
+          <Key>
+            <PropertyRef Name="KHID" />
+          </Key>
+          <Property Name="KHID" Type="int" Nullable="false" />
+          <Property Name="TENKH" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SDT" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="DIACHI" Type="nvarchar" MaxLength="100" />
+          <Property Name="NGAYTG" Type="date" />
+        </EntityType>
+        <EntityType Name="NCC">
+          <Key>
+            <PropertyRef Name="NCCID" />
+          </Key>
+          <Property Name="NCCID" Type="int" Nullable="false" />
+          <Property Name="TENNCC" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="SDTNCC" Type="varchar" MaxLength="15" />
+          <Property Name="DIACHI" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="NV">
+          <Key>
+            <PropertyRef Name="NVID" />
+          </Key>
+          <Property Name="NVID" Type="int" Nullable="false" />
+          <Property Name="TENNV" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CAPBAC" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LUONG" Type="money" Nullable="false" />
+          <Property Name="SDT" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="NGAYVL" Type="date" />
+          <Property Name="DIACHI" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="SP">
+          <Key>
+            <PropertyRef Name="SPID" />
+          </Key>
+          <Property Name="SPID" Type="int" Nullable="false" />
+          <Property Name="TENSP" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DMSPID" Type="int" />
+          <Property Name="NCCID" Type="int" />
+          <Property Name="GIA" Type="money" Nullable="false" />
+          <Property Name="SOLUONG" Type="int" />
+          <Property Name="TRANGTHAI" Type="nvarchar" MaxLength="20" />
+          <Property Name="HINHANH" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="TT">
+          <Key>
+            <PropertyRef Name="TTID" />
+          </Key>
+          <Property Name="TTID" Type="int" Nullable="false" />
+          <Property Name="HDID" Type="int" />
+          <Property Name="PHUONGTHUC" Type="nvarchar" MaxLength="50" />
+          <Property Name="NGAYTT" Type="datetime" />
+          <Property Name="SOTIEN" Type="money" />
+        </EntityType>
+        <Association Name="FK_CTHD_HD">
+          <End Role="HD" Type="Self.HD" Multiplicity="1" />
+          <End Role="CTHD" Type="Self.CTHD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HD">
+              <PropertyRef Name="HDID" />
+            </Principal>
+            <Dependent Role="CTHD">
+              <PropertyRef Name="HDID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CTHD_SP">
+          <End Role="SP" Type="Self.SP" Multiplicity="1" />
+          <End Role="CTHD" Type="Self.CTHD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SP">
+              <PropertyRef Name="SPID" />
+            </Principal>
+            <Dependent Role="CTHD">
+              <PropertyRef Name="SPID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DG_KH">
+          <End Role="KH" Type="Self.KH" Multiplicity="1" />
+          <End Role="DG" Type="Self.DG" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KH">
+              <PropertyRef Name="KHID" />
+            </Principal>
+            <Dependent Role="DG">
+              <PropertyRef Name="KHID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DG_SP">
+          <End Role="SP" Type="Self.SP" Multiplicity="1" />
+          <End Role="DG" Type="Self.DG" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SP">
+              <PropertyRef Name="SPID" />
+            </Principal>
+            <Dependent Role="DG">
+              <PropertyRef Name="SPID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GH_HD">
+          <End Role="HD" Type="Self.HD" Multiplicity="0..1" />
+          <End Role="GH" Type="Self.GH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HD">
+              <PropertyRef Name="HDID" />
+            </Principal>
+            <Dependent Role="GH">
+              <PropertyRef Name="HDID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GH_NV">
+          <End Role="NV" Type="Self.NV" Multiplicity="0..1" />
+          <End Role="GH" Type="Self.GH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NV">
+              <PropertyRef Name="NVID" />
+            </Principal>
+            <Dependent Role="GH">
+              <PropertyRef Name="NVID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HD_KH">
+          <End Role="KH" Type="Self.KH" Multiplicity="0..1" />
+          <End Role="HD" Type="Self.HD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KH">
+              <PropertyRef Name="KHID" />
+            </Principal>
+            <Dependent Role="HD">
+              <PropertyRef Name="KHID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HD_NV">
+          <End Role="NV" Type="Self.NV" Multiplicity="0..1" />
+          <End Role="HD" Type="Self.HD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NV">
+              <PropertyRef Name="NVID" />
+            </Principal>
+            <Dependent Role="HD">
+              <PropertyRef Name="NVID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SP_DMSP">
+          <End Role="DMSP" Type="Self.DMSP" Multiplicity="0..1" />
+          <End Role="SP" Type="Self.SP" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DMSP">
+              <PropertyRef Name="DMSPID" />
+            </Principal>
+            <Dependent Role="SP">
+              <PropertyRef Name="DMSPID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SP_NCC">
+          <End Role="NCC" Type="Self.NCC" Multiplicity="0..1" />
+          <End Role="SP" Type="Self.SP" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NCC">
+              <PropertyRef Name="NCCID" />
+            </Principal>
+            <Dependent Role="SP">
+              <PropertyRef Name="NCCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TT_HD">
+          <End Role="HD" Type="Self.HD" Multiplicity="0..1" />
+          <End Role="TT" Type="Self.TT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HD">
+              <PropertyRef Name="HDID" />
+            </Principal>
+            <Dependent Role="TT">
+              <PropertyRef Name="HDID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="USP_CAPNHAT_CAPBAC_NV_TU_LUONG" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="USP_TAO_HOADON" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="KHID" Type="int" Mode="In" />
+          <Parameter Name="NVID" Type="int" Mode="In" />
+          <Parameter Name="PHUONGTHUC" Type="nvarchar" Mode="In" />
+          <Parameter Name="CTHD_LIST" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="USP_THEM_SP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TENSP" Type="nvarchar" Mode="In" />
+          <Parameter Name="DMSPID" Type="int" Mode="In" />
+          <Parameter Name="NCCID" Type="int" Mode="In" />
+          <Parameter Name="GIA" Type="money" Mode="In" />
+          <Parameter Name="SOLUONG" Type="int" Mode="In" />
+        </Function>
+        <Function Name="USP_TIM_SP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TUKHOA" Type="nvarchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="SOSModelStoreContainer">
+          <EntitySet Name="CTHD" EntityType="Self.CTHD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DG" EntityType="Self.DG" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DMSP" EntityType="Self.DMSP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GH" EntityType="Self.GH" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HD" EntityType="Self.HD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KH" EntityType="Self.KH" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NCC" EntityType="Self.NCC" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NV" EntityType="Self.NV" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SP" EntityType="Self.SP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TT" EntityType="Self.TT" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CTHD_HD" Association="Self.FK_CTHD_HD">
+            <End Role="HD" EntitySet="HD" />
+            <End Role="CTHD" EntitySet="CTHD" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CTHD_SP" Association="Self.FK_CTHD_SP">
+            <End Role="SP" EntitySet="SP" />
+            <End Role="CTHD" EntitySet="CTHD" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DG_KH" Association="Self.FK_DG_KH">
+            <End Role="KH" EntitySet="KH" />
+            <End Role="DG" EntitySet="DG" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DG_SP" Association="Self.FK_DG_SP">
+            <End Role="SP" EntitySet="SP" />
+            <End Role="DG" EntitySet="DG" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GH_HD" Association="Self.FK_GH_HD">
+            <End Role="HD" EntitySet="HD" />
+            <End Role="GH" EntitySet="GH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GH_NV" Association="Self.FK_GH_NV">
+            <End Role="NV" EntitySet="NV" />
+            <End Role="GH" EntitySet="GH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HD_KH" Association="Self.FK_HD_KH">
+            <End Role="KH" EntitySet="KH" />
+            <End Role="HD" EntitySet="HD" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HD_NV" Association="Self.FK_HD_NV">
+            <End Role="NV" EntitySet="NV" />
+            <End Role="HD" EntitySet="HD" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SP_DMSP" Association="Self.FK_SP_DMSP">
+            <End Role="DMSP" EntitySet="DMSP" />
+            <End Role="SP" EntitySet="SP" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SP_NCC" Association="Self.FK_SP_NCC">
+            <End Role="NCC" EntitySet="NCC" />
+            <End Role="SP" EntitySet="SP" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TT_HD" Association="Self.FK_TT_HD">
+            <End Role="HD" EntitySet="HD" />
+            <End Role="TT" EntitySet="TT" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SOSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CTHD">
+          <Key>
+            <PropertyRef Name="HDID" />
+            <PropertyRef Name="SPID" />
+          </Key>
+          <Property Name="HDID" Type="Int32" Nullable="false" />
+          <Property Name="SPID" Type="Int32" Nullable="false" />
+          <Property Name="SOLUONG" Type="Int32" />
+          <Property Name="DONGIA" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="HD" Relationship="Self.FK_CTHD_HD" FromRole="CTHD" ToRole="HD" />
+          <NavigationProperty Name="SP" Relationship="Self.FK_CTHD_SP" FromRole="CTHD" ToRole="SP" />
+        </EntityType>
+        <EntityType Name="DG">
+          <Key>
+            <PropertyRef Name="DGID" />
+          </Key>
+          <Property Name="DGID" Type="Int32" Nullable="false" />
+          <Property Name="KHID" Type="Int32" Nullable="false" />
+          <Property Name="SPID" Type="Int32" Nullable="false" />
+          <Property Name="SAO" Type="Int32" />
+          <Property Name="BINHLUAN" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="NGAYDG" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="KH" Relationship="Self.FK_DG_KH" FromRole="DG" ToRole="KH" />
+          <NavigationProperty Name="SP" Relationship="Self.FK_DG_SP" FromRole="DG" ToRole="SP" />
+        </EntityType>
+        <EntityType Name="DMSP">
+          <Key>
+            <PropertyRef Name="DMSPID" />
+          </Key>
+          <Property Name="DMSPID" Type="Int32" Nullable="false" />
+          <Property Name="TENDM" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MOTA" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SPs" Relationship="Self.FK_SP_DMSP" FromRole="DMSP" ToRole="SP" />
+        </EntityType>
+        <EntityType Name="GH">
+          <Key>
+            <PropertyRef Name="GHID" />
+          </Key>
+          <Property Name="GHID" Type="Int32" Nullable="false" />
+          <Property Name="HDID" Type="Int32" />
+          <Property Name="NVID" Type="Int32" />
+          <Property Name="NGAYGIAO" Type="DateTime" Precision="0" />
+          <Property Name="TRANGTHAI" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="HD" Relationship="Self.FK_GH_HD" FromRole="GH" ToRole="HD" />
+          <NavigationProperty Name="NV" Relationship="Self.FK_GH_NV" FromRole="GH" ToRole="NV" />
+        </EntityType>
+        <EntityType Name="HD">
+          <Key>
+            <PropertyRef Name="HDID" />
+          </Key>
+          <Property Name="HDID" Type="Int32" Nullable="false" />
+          <Property Name="KHID" Type="Int32" />
+          <Property Name="NVID" Type="Int32" />
+          <Property Name="NGAYLAP" Type="DateTime" Precision="3" />
+          <Property Name="TONGTIEN" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TRANGTHAI" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CTHDs" Relationship="Self.FK_CTHD_HD" FromRole="HD" ToRole="CTHD" />
+          <NavigationProperty Name="GHs" Relationship="Self.FK_GH_HD" FromRole="HD" ToRole="GH" />
+          <NavigationProperty Name="KH" Relationship="Self.FK_HD_KH" FromRole="HD" ToRole="KH" />
+          <NavigationProperty Name="NV" Relationship="Self.FK_HD_NV" FromRole="HD" ToRole="NV" />
+          <NavigationProperty Name="TTs" Relationship="Self.FK_TT_HD" FromRole="HD" ToRole="TT" />
+        </EntityType>
+        <EntityType Name="KH">
+          <Key>
+            <PropertyRef Name="KHID" />
+          </Key>
+          <Property Name="KHID" Type="Int32" Nullable="false" />
+          <Property Name="TENKH" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SDT" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DIACHI" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="NGAYTG" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="DGs" Relationship="Self.FK_DG_KH" FromRole="KH" ToRole="DG" />
+          <NavigationProperty Name="HDs" Relationship="Self.FK_HD_KH" FromRole="KH" ToRole="HD" />
+        </EntityType>
+        <EntityType Name="NCC">
+          <Key>
+            <PropertyRef Name="NCCID" />
+          </Key>
+          <Property Name="NCCID" Type="Int32" Nullable="false" />
+          <Property Name="TENNCC" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SDTNCC" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="DIACHI" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SPs" Relationship="Self.FK_SP_NCC" FromRole="NCC" ToRole="SP" />
+        </EntityType>
+        <EntityType Name="NV">
+          <Key>
+            <PropertyRef Name="NVID" />
+          </Key>
+          <Property Name="NVID" Type="Int32" Nullable="false" />
+          <Property Name="TENNV" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CAPBAC" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LUONG" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="SDT" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NGAYVL" Type="DateTime" Precision="0" />
+          <Property Name="DIACHI" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="GHs" Relationship="Self.FK_GH_NV" FromRole="NV" ToRole="GH" />
+          <NavigationProperty Name="HDs" Relationship="Self.FK_HD_NV" FromRole="NV" ToRole="HD" />
+        </EntityType>
+        <EntityType Name="SP">
+          <Key>
+            <PropertyRef Name="SPID" />
+          </Key>
+          <Property Name="SPID" Type="Int32" Nullable="false" />
+          <Property Name="TENSP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DMSPID" Type="Int32" />
+          <Property Name="NCCID" Type="Int32" />
+          <Property Name="GIA" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="SOLUONG" Type="Int32" />
+          <Property Name="TRANGTHAI" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CTHDs" Relationship="Self.FK_CTHD_SP" FromRole="SP" ToRole="CTHD" />
+          <NavigationProperty Name="DGs" Relationship="Self.FK_DG_SP" FromRole="SP" ToRole="DG" />
+          <NavigationProperty Name="DMSP" Relationship="Self.FK_SP_DMSP" FromRole="SP" ToRole="DMSP" />
+          <NavigationProperty Name="NCC" Relationship="Self.FK_SP_NCC" FromRole="SP" ToRole="NCC" />
+          <Property Name="HINHANH" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TT">
+          <Key>
+            <PropertyRef Name="TTID" />
+          </Key>
+          <Property Name="TTID" Type="Int32" Nullable="false" />
+          <Property Name="HDID" Type="Int32" />
+          <Property Name="PHUONGTHUC" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NGAYTT" Type="DateTime" Precision="3" />
+          <Property Name="SOTIEN" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="HD" Relationship="Self.FK_TT_HD" FromRole="TT" ToRole="HD" />
+        </EntityType>
+        <Association Name="FK_CTHD_HD">
+          <End Role="HD" Type="Self.HD" Multiplicity="1" />
+          <End Role="CTHD" Type="Self.CTHD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HD">
+              <PropertyRef Name="HDID" />
+            </Principal>
+            <Dependent Role="CTHD">
+              <PropertyRef Name="HDID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CTHD_SP">
+          <End Role="SP" Type="Self.SP" Multiplicity="1" />
+          <End Role="CTHD" Type="Self.CTHD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SP">
+              <PropertyRef Name="SPID" />
+            </Principal>
+            <Dependent Role="CTHD">
+              <PropertyRef Name="SPID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DG_KH">
+          <End Role="KH" Type="Self.KH" Multiplicity="1" />
+          <End Role="DG" Type="Self.DG" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KH">
+              <PropertyRef Name="KHID" />
+            </Principal>
+            <Dependent Role="DG">
+              <PropertyRef Name="KHID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DG_SP">
+          <End Role="SP" Type="Self.SP" Multiplicity="1" />
+          <End Role="DG" Type="Self.DG" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SP">
+              <PropertyRef Name="SPID" />
+            </Principal>
+            <Dependent Role="DG">
+              <PropertyRef Name="SPID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SP_DMSP">
+          <End Role="DMSP" Type="Self.DMSP" Multiplicity="0..1" />
+          <End Role="SP" Type="Self.SP" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DMSP">
+              <PropertyRef Name="DMSPID" />
+            </Principal>
+            <Dependent Role="SP">
+              <PropertyRef Name="DMSPID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GH_HD">
+          <End Role="HD" Type="Self.HD" Multiplicity="0..1" />
+          <End Role="GH" Type="Self.GH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HD">
+              <PropertyRef Name="HDID" />
+            </Principal>
+            <Dependent Role="GH">
+              <PropertyRef Name="HDID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GH_NV">
+          <End Role="NV" Type="Self.NV" Multiplicity="0..1" />
+          <End Role="GH" Type="Self.GH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NV">
+              <PropertyRef Name="NVID" />
+            </Principal>
+            <Dependent Role="GH">
+              <PropertyRef Name="NVID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HD_KH">
+          <End Role="KH" Type="Self.KH" Multiplicity="0..1" />
+          <End Role="HD" Type="Self.HD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KH">
+              <PropertyRef Name="KHID" />
+            </Principal>
+            <Dependent Role="HD">
+              <PropertyRef Name="KHID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_HD_NV">
+          <End Role="NV" Type="Self.NV" Multiplicity="0..1" />
+          <End Role="HD" Type="Self.HD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NV">
+              <PropertyRef Name="NVID" />
+            </Principal>
+            <Dependent Role="HD">
+              <PropertyRef Name="NVID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TT_HD">
+          <End Role="HD" Type="Self.HD" Multiplicity="0..1" />
+          <End Role="TT" Type="Self.TT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HD">
+              <PropertyRef Name="HDID" />
+            </Principal>
+            <Dependent Role="TT">
+              <PropertyRef Name="HDID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SP_NCC">
+          <End Role="NCC" Type="Self.NCC" Multiplicity="0..1" />
+          <End Role="SP" Type="Self.SP" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NCC">
+              <PropertyRef Name="NCCID" />
+            </Principal>
+            <Dependent Role="SP">
+              <PropertyRef Name="NCCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SOSEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CTHDs" EntityType="Self.CTHD" />
+          <EntitySet Name="DGs" EntityType="Self.DG" />
+          <EntitySet Name="DMSPs" EntityType="Self.DMSP" />
+          <EntitySet Name="GHs" EntityType="Self.GH" />
+          <EntitySet Name="HDs" EntityType="Self.HD" />
+          <EntitySet Name="KHs" EntityType="Self.KH" />
+          <EntitySet Name="NCCs" EntityType="Self.NCC" />
+          <EntitySet Name="NVs" EntityType="Self.NV" />
+          <EntitySet Name="SPs" EntityType="Self.SP" />
+          <EntitySet Name="TTs" EntityType="Self.TT" />
+          <AssociationSet Name="FK_CTHD_HD" Association="Self.FK_CTHD_HD">
+            <End Role="HD" EntitySet="HDs" />
+            <End Role="CTHD" EntitySet="CTHDs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CTHD_SP" Association="Self.FK_CTHD_SP">
+            <End Role="SP" EntitySet="SPs" />
+            <End Role="CTHD" EntitySet="CTHDs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DG_KH" Association="Self.FK_DG_KH">
+            <End Role="KH" EntitySet="KHs" />
+            <End Role="DG" EntitySet="DGs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DG_SP" Association="Self.FK_DG_SP">
+            <End Role="SP" EntitySet="SPs" />
+            <End Role="DG" EntitySet="DGs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SP_DMSP" Association="Self.FK_SP_DMSP">
+            <End Role="DMSP" EntitySet="DMSPs" />
+            <End Role="SP" EntitySet="SPs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GH_HD" Association="Self.FK_GH_HD">
+            <End Role="HD" EntitySet="HDs" />
+            <End Role="GH" EntitySet="GHs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GH_NV" Association="Self.FK_GH_NV">
+            <End Role="NV" EntitySet="NVs" />
+            <End Role="GH" EntitySet="GHs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HD_KH" Association="Self.FK_HD_KH">
+            <End Role="KH" EntitySet="KHs" />
+            <End Role="HD" EntitySet="HDs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_HD_NV" Association="Self.FK_HD_NV">
+            <End Role="NV" EntitySet="NVs" />
+            <End Role="HD" EntitySet="HDs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TT_HD" Association="Self.FK_TT_HD">
+            <End Role="HD" EntitySet="HDs" />
+            <End Role="TT" EntitySet="TTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SP_NCC" Association="Self.FK_SP_NCC">
+            <End Role="NCC" EntitySet="NCCs" />
+            <End Role="SP" EntitySet="SPs" />
+          </AssociationSet>
+          <FunctionImport Name="USP_CAPNHAT_CAPBAC_NV_TU_LUONG" />
+          <FunctionImport Name="USP_TAO_HOADON" ReturnType="Collection(Int32)">
+            <Parameter Name="KHID" Mode="In" Type="Int32" />
+            <Parameter Name="NVID" Mode="In" Type="Int32" />
+            <Parameter Name="PHUONGTHUC" Mode="In" Type="String" />
+            <Parameter Name="CTHD_LIST" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_TIM_SP" ReturnType="Collection(SOSModel.USP_TIM_SP_Result)">
+          <Parameter Name="TUKHOA" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_THEM_SP" ReturnType="Collection(Int32)">
+            <Parameter Name="TENSP" Mode="In" Type="String" />
+            <Parameter Name="DMSPID" Mode="In" Type="Int32" />
+            <Parameter Name="NCCID" Mode="In" Type="Int32" />
+            <Parameter Name="GIA" Mode="In" Type="Decimal" />
+            <Parameter Name="SOLUONG" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="USP_TIM_SP_Result">
+          <Property Type="Int32" Name="SPID" Nullable="false" />
+          <Property Type="String" Name="TENSP" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="DMSPID" Nullable="true" />
+          <Property Type="Int32" Name="NCCID" Nullable="true" />
+          <Property Type="Decimal" Name="GIA" Nullable="false" Precision="19" />
+          <Property Type="Int32" Name="SOLUONG" Nullable="true" />
+          <Property Type="String" Name="TRANGTHAI" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="HINHANH" Nullable="true" MaxLength="255" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SOSModelStoreContainer" CdmEntityContainer="SOSEntities1">
+          <EntitySetMapping Name="CTHDs">
+            <EntityTypeMapping TypeName="SOSModel.CTHD">
+              <MappingFragment StoreEntitySet="CTHD">
+                <ScalarProperty Name="HDID" ColumnName="HDID" />
+                <ScalarProperty Name="SPID" ColumnName="SPID" />
+                <ScalarProperty Name="SOLUONG" ColumnName="SOLUONG" />
+                <ScalarProperty Name="DONGIA" ColumnName="DONGIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DGs">
+            <EntityTypeMapping TypeName="SOSModel.DG">
+              <MappingFragment StoreEntitySet="DG">
+                <ScalarProperty Name="DGID" ColumnName="DGID" />
+                <ScalarProperty Name="KHID" ColumnName="KHID" />
+                <ScalarProperty Name="SPID" ColumnName="SPID" />
+                <ScalarProperty Name="SAO" ColumnName="SAO" />
+                <ScalarProperty Name="BINHLUAN" ColumnName="BINHLUAN" />
+                <ScalarProperty Name="NGAYDG" ColumnName="NGAYDG" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DMSPs">
+            <EntityTypeMapping TypeName="SOSModel.DMSP">
+              <MappingFragment StoreEntitySet="DMSP">
+                <ScalarProperty Name="DMSPID" ColumnName="DMSPID" />
+                <ScalarProperty Name="TENDM" ColumnName="TENDM" />
+                <ScalarProperty Name="MOTA" ColumnName="MOTA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GHs">
+            <EntityTypeMapping TypeName="SOSModel.GH">
+              <MappingFragment StoreEntitySet="GH">
+                <ScalarProperty Name="GHID" ColumnName="GHID" />
+                <ScalarProperty Name="HDID" ColumnName="HDID" />
+                <ScalarProperty Name="NVID" ColumnName="NVID" />
+                <ScalarProperty Name="NGAYGIAO" ColumnName="NGAYGIAO" />
+                <ScalarProperty Name="TRANGTHAI" ColumnName="TRANGTHAI" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HDs">
+            <EntityTypeMapping TypeName="SOSModel.HD">
+              <MappingFragment StoreEntitySet="HD">
+                <ScalarProperty Name="HDID" ColumnName="HDID" />
+                <ScalarProperty Name="KHID" ColumnName="KHID" />
+                <ScalarProperty Name="NVID" ColumnName="NVID" />
+                <ScalarProperty Name="NGAYLAP" ColumnName="NGAYLAP" />
+                <ScalarProperty Name="TONGTIEN" ColumnName="TONGTIEN" />
+                <ScalarProperty Name="TRANGTHAI" ColumnName="TRANGTHAI" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KHs">
+            <EntityTypeMapping TypeName="SOSModel.KH">
+              <MappingFragment StoreEntitySet="KH">
+                <ScalarProperty Name="KHID" ColumnName="KHID" />
+                <ScalarProperty Name="TENKH" ColumnName="TENKH" />
+                <ScalarProperty Name="SDT" ColumnName="SDT" />
+                <ScalarProperty Name="DIACHI" ColumnName="DIACHI" />
+                <ScalarProperty Name="NGAYTG" ColumnName="NGAYTG" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NCCs">
+            <EntityTypeMapping TypeName="SOSModel.NCC">
+              <MappingFragment StoreEntitySet="NCC">
+                <ScalarProperty Name="NCCID" ColumnName="NCCID" />
+                <ScalarProperty Name="TENNCC" ColumnName="TENNCC" />
+                <ScalarProperty Name="SDTNCC" ColumnName="SDTNCC" />
+                <ScalarProperty Name="DIACHI" ColumnName="DIACHI" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NVs">
+            <EntityTypeMapping TypeName="SOSModel.NV">
+              <MappingFragment StoreEntitySet="NV">
+                <ScalarProperty Name="NVID" ColumnName="NVID" />
+                <ScalarProperty Name="TENNV" ColumnName="TENNV" />
+                <ScalarProperty Name="CAPBAC" ColumnName="CAPBAC" />
+                <ScalarProperty Name="LUONG" ColumnName="LUONG" />
+                <ScalarProperty Name="SDT" ColumnName="SDT" />
+                <ScalarProperty Name="NGAYVL" ColumnName="NGAYVL" />
+                <ScalarProperty Name="DIACHI" ColumnName="DIACHI" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SPs">
+            <EntityTypeMapping TypeName="SOSModel.SP">
+              <MappingFragment StoreEntitySet="SP">
+                <ScalarProperty Name="HINHANH" ColumnName="HINHANH" />
+                <ScalarProperty Name="SPID" ColumnName="SPID" />
+                <ScalarProperty Name="TENSP" ColumnName="TENSP" />
+                <ScalarProperty Name="DMSPID" ColumnName="DMSPID" />
+                <ScalarProperty Name="NCCID" ColumnName="NCCID" />
+                <ScalarProperty Name="GIA" ColumnName="GIA" />
+                <ScalarProperty Name="SOLUONG" ColumnName="SOLUONG" />
+                <ScalarProperty Name="TRANGTHAI" ColumnName="TRANGTHAI" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TTs">
+            <EntityTypeMapping TypeName="SOSModel.TT">
+              <MappingFragment StoreEntitySet="TT">
+                <ScalarProperty Name="TTID" ColumnName="TTID" />
+                <ScalarProperty Name="HDID" ColumnName="HDID" />
+                <ScalarProperty Name="PHUONGTHUC" ColumnName="PHUONGTHUC" />
+                <ScalarProperty Name="NGAYTT" ColumnName="NGAYTT" />
+                <ScalarProperty Name="SOTIEN" ColumnName="SOTIEN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="USP_CAPNHAT_CAPBAC_NV_TU_LUONG" FunctionName="SOSModel.Store.USP_CAPNHAT_CAPBAC_NV_TU_LUONG" />
+          <FunctionImportMapping FunctionImportName="USP_TAO_HOADON" FunctionName="SOSModel.Store.USP_TAO_HOADON" />
+          <FunctionImportMapping FunctionImportName="USP_TIM_SP" FunctionName="SOSModel.Store.USP_TIM_SP">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SOSModel.USP_TIM_SP_Result">
+                <ScalarProperty Name="SPID" ColumnName="SPID" />
+                <ScalarProperty Name="TENSP" ColumnName="TENSP" />
+                <ScalarProperty Name="DMSPID" ColumnName="DMSPID" />
+                <ScalarProperty Name="NCCID" ColumnName="NCCID" />
+                <ScalarProperty Name="GIA" ColumnName="GIA" />
+                <ScalarProperty Name="SOLUONG" ColumnName="SOLUONG" />
+                <ScalarProperty Name="TRANGTHAI" ColumnName="TRANGTHAI" />
+                <ScalarProperty Name="HINHANH" ColumnName="HINHANH" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_THEM_SP" FunctionName="SOSModel.Store.USP_THEM_SP" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
